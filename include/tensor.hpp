@@ -7,6 +7,8 @@ class Tensor
 public:
     Tensor(std::vector<int> shape);
 
+    float get(std::vector<int>& index) const;
+    void fill(std::vector<float> data);
     void print() const;
 private:
     std::vector<float> data_;

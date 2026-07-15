@@ -1,7 +1,7 @@
 #include "tensor.hpp"
 #include <iostream>
 
-Tensor::Tensor(std::vector<int> shape) : shape_(std::move(shape)), strides_(computeStrides(shape))
+Tensor::Tensor(std::vector<int> shape) : shape_(std::move(shape)), strides_(computeStrides(shape_))
 {
     auto total = numel();
     data_.resize(total);
@@ -20,6 +20,22 @@ std::vector<int> Tensor::computeStrides(std::vector<int>& shape)
     return strides;
 }
 
+float Tensor::get(std::vector<int>& index) const
+{
+    int offset = 0;
+    for (int i = 0; i < index.size(); i++)
+    {
+        offset = offset + (index[i] * strides_[i]);
+    }
+
+    return data_[offset];
+}
+
+void Tensor::fill(std::vector<float> data)
+{
+    data_ = std::move(data);
+}
+
 void Tensor::print() const
 {
     std::cout << numel() << std::endl;
@@ -32,6 +48,6 @@ int Tensor::numel() const
     {
         total = total * dim;
     }
-
+    
     return total;
 }
