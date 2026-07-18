@@ -31,7 +31,7 @@ float Tensor::get(std::vector<int>& index) const
     return data_[offset];
 }
 
-void Tensor::fill(std::vector<float> data)
+void Tensor::fill_(std::vector<float> data)
 {
     data_ = std::move(data);
 }
@@ -50,4 +50,53 @@ int Tensor::numel() const
     }
     
     return total;
+}
+
+int Tensor::offset(std::vector<int>& index) const
+{
+    int offset = 0;
+    for(int i = 0; i < index.size(); i++)
+    {
+        offset = offset + (index[i] * strides_[i]);
+    }
+
+    return offset;
+}
+
+Tensor Tensor::reshape(std::vector<int> shape)
+{
+    Tensor result(*this);
+    result.shape_ = shape;
+    result.strides_ = computeStrides(shape);
+    return result;
+}
+
+Tensor& Tensor::ones_()
+{
+    for (int i = 0; i < data_.size(); i++)
+    {
+        data_[i] = 1;
+    }
+
+    return *this;
+}
+
+Tensor& Tensor::zeros_()
+{
+    for (int i = 0; i < data_.size(); i++)
+    {
+        data_[i] = 0;
+    }
+
+    return *this;
+}
+
+Tensor& Tensor::fill_(float value)
+{
+    for (int i = 0; i < data_.size(); i++)
+    {
+        data_[i] = value;
+    }
+
+    return *this;
 }
